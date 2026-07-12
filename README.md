@@ -323,52 +323,10 @@ per trial).
 - The novelty claim (analyzing this specific feedback-loop mechanism in VA
   literature) is stated as an observation from the related work I've
   reviewed so far, not a verified, exhaustive priority claim.
-- One reference in the paper's bibliography is only partially verified
-  (confirmed content/title, not independently confirmed venue/year against
-  the primary source) — flagged as such in the paper itself rather than
-  presented as fully checked.
 - The IMU-drift robustness discussion in the paper is an **analytic bound**
   from the simulation's own noise parameters, not a separately measured
   quantity — the README and paper both say so explicitly rather than
   blurring the two.
-
----
-
-## 6. On Priority and Reuse of This Work
-
-I want people — professors, reviewers, other students — to be able to see
-what I actually did here, in enough depth to evaluate the contribution. I
-also don't want to pretend a README can do something it can't: **there is no
-wording that technically prevents someone from reading this page and
-reimplementing the idea.** That's true of research generally, not a gap
-specific to this repo, and I'd rather say that plainly than write something
-reassuring but false.
-
-What actually *does* establish priority, in order of how much it matters:
-
-1. **A dated, public trail of the work.** This repository's commit history,
-   and (once posted) a preprint, are both time-stamped evidence of when this
-   idea existed in this specific, developed form — with math, working
-   results, and analysis — not just as a one-line idea. Priority disputes in
-   research are resolved by "who published/timestamped it first and most
-   concretely," not by who kept it secret longest.
-2. **A preprint (e.g. arXiv) once the paper is far enough along.** This is
-   the standard mechanism the academic community actually trusts for
-   priority — more than a GitHub timestamp alone.
-3. **Standard copyright**, which already applies automatically to this
-   README's text, the figures, and (once released) the code — no
-   registration needed. It protects *this specific expression* of the work
-   (the writing, the exact figures, the exact code), not the underlying
-   method as an abstract idea. That's how copyright works everywhere, not a
-   weakness of this particular repo.
-4. **Citation norms.** If you use ideas, figures, or results from this
-   repository or the associated paper, please cite it — a formal citation
-   (BibTeX) will be added here once the paper has a DOI/arXiv ID.
-
-If you're evaluating this project (e.g. as a professor or reviewer) and want
-early access to the implementation ahead of the code release, please reach
-out directly rather than asking for it to be posted early — contact details
-below.
 
 ---
 
@@ -377,7 +335,7 @@ below.
 <div align="center">
 
 **Muhammad Ibaad**
-Dawood University of Engineering and Technology, Karachi, Pakistan
+Early Stage Researcher
 [ibaadsajidshaikh18@gmail.com](mailto:ibaadsajidshaikh18@gmail.com)
 
 *A preprint/paper for this work is in progress. Citation details will be
