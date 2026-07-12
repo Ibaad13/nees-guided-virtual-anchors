@@ -1,11 +1,36 @@
-# NEES-Guided Virtual Anchor Geometry Recovery for RSSI-IMU Indoor Localization Under NLOS
+<div align="center">
 
-**Status: work in progress.** This repository currently contains the
-**results, figures, and technical write-up** for this project. The
-**implementation code is intentionally withheld** while I finish writing the
-paper — see [`Codes/README.md`](Codes/README.md) for why, and what will land
-there once it's ready. Everything below is accurate to the current draft of
-the paper and is not placeholder content.
+# NEES-Guided Virtual Anchor Geometry Recovery
+### for RSSI-IMU Indoor Localization Under NLOS
+
+[![Status](https://img.shields.io/badge/status-work%20in%20progress-yellow)]()
+[![Paper](https://img.shields.io/badge/paper-in%20preparation-blue)]()
+[![Code](https://img.shields.io/badge/code-withheld%20until%20publication-lightgrey)]()
+[![Trials](https://img.shields.io/badge/Monte%20Carlo-50%20trials-informational)]()
+[![RMSE](https://img.shields.io/badge/RMSE%20reduction-66%25%20vs%20naive-success)]()
+
+*Identifying and fixing a self-referential feedback-loop failure in model-based virtual anchors for NLOS-degraded indoor EKF localization.*
+
+</div>
+
+---
+
+> **Status: work in progress.** This repository currently contains the
+> **results, figures, and technical write-up** for this project. The
+> **implementation code is intentionally withheld** while I finish writing
+> the paper — see [`Codes/README.md`](Codes/README.md) for why, and what
+> will land there once it's ready. Everything below is accurate to the
+> current draft of the paper and is not placeholder content.
+
+## Contents
+
+- [1. Problem](#1-problem)
+- [2. Method and Mathematics](#2-method-and-mathematics)
+- [3. Simulation Setup](#3-simulation-setup)
+- [4. Results](#4-results)
+- [5. Scope, Honesty Notes, and What's Not Claimed](#5-scope-honesty-notes-and-whats-not-claimed)
+- [6. On Priority and Reuse of This Work](#6-on-priority-and-reuse-of-this-work)
+- [Contact](#contact)
 
 ---
 
@@ -161,6 +186,14 @@ whole-vector normalized-innovation-squared (NIS) test run; either failing
 skips that measurement (or the whole step) rather than letting it inject a
 large, potentially divergent correction.
 
+<div align="center">
+<img src="Results/Figures/fig_environment.png" width="620" alt="Hall layout with anchors, walls, trajectory, and virtual anchor locations">
+
+**Figure 1.** Hall layout: real anchors (green), NLOS wall blockers (gray),
+one representative true trajectory (blue), and every virtual-anchor
+location spawned across that trial (red stars).
+</div>
+
 ---
 
 ## 3. Simulation Setup
@@ -181,14 +214,13 @@ large, potentially divergent correction.
 | GDOP grid resolution | 0.5 | m |
 
 Four methods compared over **N = 50 Monte Carlo trials**:
-- **Naive** — all anchors used, no NLOS awareness.
-- **Reject** — flagged anchors get $R_i = 10^6$ (effectively dropped).
-- **k-NN NLOS** — a training-free local-outlier-factor-style baseline: each
-  anchor's RSSI is checked against a rolling 20-sample window using
-  $k$-nearest-neighbor distance; flagged anchors are rejected the same way
-  as the Reject method. Included as a lightweight-ML comparator, distinct
-  from the NEES-based detector.
-- **Proposed VA** — the three-layer method above.
+
+| Method | Description |
+|---|---|
+| **Naive** | All anchors used, no NLOS awareness. |
+| **Reject** | Flagged anchors get $R_i = 10^6$ (effectively dropped). |
+| **k-NN NLOS** | Training-free local-outlier-factor-style baseline: each anchor's RSSI checked against a rolling 20-sample window via $k$-nearest-neighbor distance; flagged anchors rejected the same way as Reject. A lightweight-ML comparator, distinct from the NEES-based detector. |
+| **Proposed VA** | The three-layer method above. |
 
 All four methods' per-step wall-clock time was **measured directly**, not
 estimated.
@@ -206,18 +238,28 @@ estimated.
 | k-NN NLOS | 3.93 | 0.13 | 5.68 | 1.59% |
 | **Proposed VA** | **1.20** | **1.08** | **6.90** | **0.00%** |
 
-**Headline result:** 66% mean-RMSE reduction vs. naive, 67% vs. rejection,
-with tighter spread than rejection and zero anchor-availability loss.
+> **Headline result:** 66% mean-RMSE reduction vs. naive, 67% vs. rejection,
+> with tighter spread than rejection and zero anchor-availability loss.
 
-**An honest negative result worth keeping visible:** the k-NN baseline did
-**not** outperform naive — it both misses genuine NLOS events and
-false-flags LOS anchors (degrading geometry more than it corrects bias),
-and it was, contrary to its "lightweight" framing, the **most
-computationally expensive** method tested (0.93 ms/step vs. 0.48 ms for the
-proposed method), due to its $O(\text{window}^2)$ pairwise-distance
-computation. This matters for the paper's argument: the gain here comes
-specifically from coupling the filter's own consistency statistic (NEES) to
-geometric recovery, not from "having some ML-flavored detector."
+<div align="center">
+<img src="Results/Figures/fig_rmse_boxplot.png" width="440" alt="RMSE boxplot across methods">
+<img src="Results/Figures/fig_cdf.png" width="440" alt="CDF of RMSE across methods">
+
+**Figure 2 (left).** Per-trial RMSE distribution across all 50 Monte Carlo
+trials, four methods.
+**Figure 3 (right).** CDF of per-trial RMSE — the proposed method's
+advantage holds across the full trial distribution, not just the mean.
+</div>
+
+> **An honest negative result worth keeping visible:** the k-NN baseline did
+> **not** outperform naive — it both misses genuine NLOS events and
+> false-flags LOS anchors (degrading geometry more than it corrects bias),
+> and it was, contrary to its "lightweight" framing, the **most
+> computationally expensive** method tested (0.93 ms/step vs. 0.48 ms for
+> the proposed method), due to its $O(\text{window}^2)$ pairwise-distance
+> computation. This matters for the paper's argument: the gain here comes
+> specifically from coupling the filter's own consistency statistic (NEES)
+> to geometric recovery, not from "having some ML-flavored detector."
 
 ### 4.2 Instrumented safety-layer behavior (measured, not assumed)
 
@@ -228,6 +270,16 @@ whole-vector test. Roughly 1 in 13 flagged steps would otherwise have
 injected an update the safety layer judged inconsistent with the filter's
 own covariance.
 
+<div align="center">
+<img src="Results/Figures/fig_nees_timeline.png" width="680" alt="NEES timeline and position error over time">
+
+**Figure 4.** One representative trial: per-anchor NEES over time with true
+NLOS episodes shaded and VA-activation onsets marked (top panel), and
+position error over time for naive/reject/proposed VA (bottom panel) —
+NEES excursions coincide with real NLOS episodes, and VA activation follows
+shortly after.
+</div>
+
 ### 4.3 Computational cost (measured)
 
 | Method | Time / step (ms) |
@@ -237,28 +289,25 @@ own covariance.
 | k-NN NLOS | 0.93 |
 | **Proposed VA** | **0.48** |
 
-All methods are ~2 orders of magnitude below the 100 ms budget of a 10 Hz
-update rate.
+<div align="center">
+<img src="Results/Figures/fig_computational.png" width="440" alt="Measured per-step runtime across methods">
 
-### 4.4 Figures
+**Figure 5.** Measured per-step wall-clock runtime, four methods. All
+methods are ~2 orders of magnitude below a 10 Hz (100 ms) real-time budget.
+</div>
 
-All figures are in [`Results/Figures/`](Results/Figures/) as vector PDFs.
+### 4.4 Figure and data index
 
-- **`fig_environment.pdf`** — Hall layout: real anchors (green), NLOS wall
-  blockers (gray), one representative true trajectory (blue), and every
-  virtual-anchor location spawned across that trial (red stars).
-- **`fig_rmse_boxplot.pdf`** — Per-trial RMSE distribution across all 50
-  Monte Carlo trials, all four methods side by side.
-- **`fig_cdf.pdf`** — CDF of per-trial RMSE, four methods — shows the
-  proposed method's advantage holds across the full trial distribution, not
-  just in the mean.
-- **`fig_nees_timeline.pdf`** — One representative trial: per-anchor NEES
-  over time with true NLOS episodes shaded and VA-activation onsets marked
-  (top panel), and position error over time for naive/reject/proposed VA
-  (bottom panel) — shows NEES excursions coinciding with real NLOS episodes
-  and VA activation following shortly after.
-- **`fig_computational.pdf`** — Measured per-step wall-clock runtime, four
-  methods.
+All figures are in [`Results/Figures/`](Results/Figures/) as both vector
+PDFs (for print/paper use) and PNGs (for quick viewing/embedding).
+
+| File | Contents |
+|---|---|
+| `fig_environment.{pdf,png}` | Hall layout, anchors, walls, trajectory, VA locations |
+| `fig_rmse_boxplot.{pdf,png}` | Per-trial RMSE distribution, 4 methods |
+| `fig_cdf.{pdf,png}` | CDF of per-trial RMSE, 4 methods |
+| `fig_nees_timeline.{pdf,png}` | Per-anchor NEES timeline + position error, 1 representative trial |
+| `fig_computational.{pdf,png}` | Measured per-step runtime, 4 methods |
 
 Raw numeric results backing these figures/tables are in
 [`Results/mc_results.npz`](Results/mc_results.npz) (NumPy archive: one
@@ -267,7 +316,7 @@ per trial).
 
 ---
 
-## 5. Scope, honesty notes, and what's not claimed
+## 5. Scope, Honesty Notes, and What's Not Claimed
 
 - This is simulation-only, in a synthetic hall with a synthetic trajectory —
   not validated on real hardware or a real building yet.
@@ -285,7 +334,7 @@ per trial).
 
 ---
 
-## 6. On priority and reuse of this work
+## 6. On Priority and Reuse of This Work
 
 I want people — professors, reviewers, other students — to be able to see
 what I actually did here, in enough depth to evaluate the contribution. I
@@ -325,9 +374,13 @@ below.
 
 ## Contact
 
+<div align="center">
+
 **Muhammad Ibaad**
 Dawood University of Engineering and Technology, Karachi, Pakistan
-ibaadsajidshaikh18@gmail.com
+[ibaadsajidshaikh18@gmail.com](mailto:ibaadsajidshaikh18@gmail.com)
 
 *A preprint/paper for this work is in progress. Citation details will be
 added here once available.*
+
+</div>
