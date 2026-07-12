@@ -29,7 +29,6 @@
 - [3. Simulation Setup](#3-simulation-setup)
 - [4. Results](#4-results)
 - [5. Scope, Honesty Notes, and What's Not Claimed](#5-scope-honesty-notes-and-whats-not-claimed)
-- [6. On Priority and Reuse of This Work](#6-on-priority-and-reuse-of-this-work)
 - [Contact](#contact)
 
 ---
